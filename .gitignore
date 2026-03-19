@@ -1,0 +1,46 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+dist
+dist-ssr
+
+# Environment variables (never commit these)
+.env
+.env.*
+!.env.example
+
+# Firebase service account (never commit this)
+serviceAccount.json
+
+# Misc / temp files
+all_commits.txt
+all_commits_updated.txt
+mailguide.md
+tmp_hero.txt
+bun.lockb
+
+# Legacy / removed
+supabase/
+vercel.json
+public/.htaccess
+src/lib/supabase.ts
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.kiro
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
