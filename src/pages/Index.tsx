@@ -7,26 +7,31 @@ import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { SITE } from "@/lib/config";
 
 const Index = () => {
+  usePageMeta({
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+  });
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
-      {/* Desktop navigation - hidden on mobile/tablet */}
       <div className="hidden xl:block">
         <VerticalNav />
       </div>
-
-      {/* Mobile/Tablet navigation - bottom bar */}
       <div className="xl:hidden">
         <BottomNav />
       </div>
 
       <main className="flex-1">
-        <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Contact />
+        <ErrorBoundary><Hero /></ErrorBoundary>
+        <ErrorBoundary><About /></ErrorBoundary>
+        <ErrorBoundary><Projects /></ErrorBoundary>
+        <ErrorBoundary><Skills /></ErrorBoundary>
+        <ErrorBoundary><Contact /></ErrorBoundary>
         <Footer />
       </main>
 

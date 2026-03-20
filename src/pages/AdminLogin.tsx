@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Home } from "lucide-react";
 import { auth, googleProvider } from "@/lib/firebase";
 import { signInWithPopup } from "firebase/auth";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import { SettingsDialog } from "@/components/SettingsDialog";
 
 const AdminLogin = () => {
@@ -17,13 +17,13 @@ const AdminLogin = () => {
             const allowedEmails = (import.meta.env.VITE_ADMIN_EMAILS || "").split(",").map((e: string) => e.trim()).filter(Boolean);
             if (user.email && !allowedEmails.includes(user.email)) {
                 await auth.signOut();
-                toast.error("Unauthorized access. Your email is not whitelisted.");
+                gooeyToast.error("Unauthorized access. Your email is not whitelisted.");
                 return;
             }
             navigate("/razer/dashboard");
-        } catch (error: any) {
-            if (error.code !== "auth/popup-closed-by-user") {
-                toast.error(error.message || "Google login failed");
+        } catch (error: unknown) {
+            if ((error as { code?: string }).code !== "auth/popup-closed-by-user") {
+                gooeyToast.error(error instanceof Error ? error.message : "Google login failed");
             }
         }
     };

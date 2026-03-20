@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ExternalLink, Save, BarChart3, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -25,8 +25,8 @@ const AnalyticsManager = () => {
                     const savedUrl = localStorage.getItem("analytics_embed_url");
                     if (savedUrl) setEmbedUrl(savedUrl);
                 }
-            } catch (err) {
-                console.error("Error fetching analytics config:", err);
+            } catch {
+                // silently fail, use defaults
             } finally {
                 setLoading(false);
             }
@@ -35,15 +35,15 @@ const AnalyticsManager = () => {
     }, []);
 
     const handleSave = async () => {
-        if (!embedUrl.trim()) { toast.error("Please enter a valid URL"); return; }
+        if (!embedUrl.trim()) { gooeyToast.error("Please enter a valid URL"); return; }
         setSaving(true);
         try {
             await setDoc(doc(db, "app_config", "analytics_embed_url"), { key: "analytics_embed_url", value: embedUrl, updated_at: new Date().toISOString() });
             localStorage.setItem("analytics_embed_url", embedUrl);
             setIsEditing(false);
-            toast.success("Analytics URL saved!");
-        } catch (err: any) {
-            toast.error(err.message || "Failed to save configuration");
+            gooeyToast.success("Analytics URL saved!");
+        } catch (err: unknown) {
+            gooeyToast.error(err instanceof Error ? err.message : "Failed to save configuration");
         } finally {
             setSaving(false);
         }

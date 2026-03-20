@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-// @ts-ignore
+// @ts-expect-error — vanta has no type declarations
 import FOG from "vanta/dist/vanta.fog.min";
 import { useTheme } from "next-themes";
 import { useThemeColor } from "@/hooks/use-theme-color";
 
 const VantaBackground = () => {
     const vantaRef = useRef<HTMLDivElement>(null);
-    const [vantaEffect, setVantaEffect] = useState<any>(null);
+    const [vantaEffect, setVantaEffect] = useState<ReturnType<typeof FOG> | null>(null);
     const { theme, systemTheme } = useTheme();
     const { themeColor } = useThemeColor();
     const [mounted, setMounted] = useState(false);
@@ -89,6 +89,7 @@ const VantaBackground = () => {
         <div
             ref={vantaRef}
             className="fixed inset-0 -z-10 w-full h-full pointer-events-none"
+            style={{ willChange: "transform" }}
         />
     );
 };

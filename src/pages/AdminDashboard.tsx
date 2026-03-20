@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, Plus, FolderKanban, Code, Settings, BarChart3, User, LayoutDashboard } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import SkillsManager from "@/components/admin/SkillsManager";
 import AnalyticsManager from "@/components/admin/AnalyticsManager";
@@ -15,9 +15,11 @@ import { useProjects } from "@/hooks/useProjects";
 import { useSkills } from "@/hooks/useSkills";
 import { SettingsDialog } from "@/components/SettingsDialog";
 
+import { User as FirebaseUser } from "firebase/auth";
+
 const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<FirebaseUser | null>(null);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { projects } = useProjects();
@@ -30,7 +32,7 @@ const AdminDashboard = () => {
             const allowedEmails = (import.meta.env.VITE_ADMIN_EMAILS || "").split(",").map((e: string) => e.trim()).filter(Boolean);
             if (firebaseUser.email && !allowedEmails.includes(firebaseUser.email)) {
                 signOut(auth);
-                toast.error("Unauthorized access.");
+                gooeyToast.error("Unauthorized access.");
                 navigate("/razer");
                 return;
             }
@@ -41,15 +43,15 @@ const AdminDashboard = () => {
     }, [navigate]);
 
     const handleLogout = async () => {
-        try { await signOut(auth); toast.success("Logged out successfully"); navigate("/razer"); }
-        catch { toast.error("Logout failed"); }
+        try { await signOut(auth); gooeyToast.success("Logged out successfully"); navigate("/razer"); }
+        catch { gooeyToast.error("Logout failed"); }
     };
 
     const handleTabChange = (value: string) => setSearchParams({ tab: value });
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>;
 
-    const featuredProjectsCount = projects.filter((p: any) => p.featured).length;
+    const featuredProjectsCount = projects.filter((p) => p.featured).length;
 
     return (
         <div className="min-h-screen bg-transparent p-4 md:p-8">
@@ -62,7 +64,15 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
                         {user && (
                             <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg bg-card/50 backdrop-blur-sm border border-primary/20">
-                                <img src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=random`} alt="Profile" className="w-8 h-8 rounded-full ring-2 ring-primary/20" />
+                                <img 
+                                    src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'User')}&background=random&size=64`} 
+                                    alt="Profile" 
+                                    className="w-8 h-8 rounded-full ring-2 ring-primary/20 object-cover"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => {
+                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'User')}&background=random&size=64`;
+                                    }}
+                                />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">{user.displayName || user.email}</span>
                                     {user.displayName && <span className="text-xs text-muted-foreground">{user.email}</span>}

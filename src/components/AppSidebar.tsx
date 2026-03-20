@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Home, User, Briefcase, Code, PenTool, Mail, ChevronRight, ChevronLeft, Sun, Moon } from "lucide-react";
+import React from "react";
 import { useTheme } from "next-themes";
 import {
   Sidebar,
@@ -13,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/useProfile";
 
-const navItems = [
+const navItems: { title: string; id: string; icon: React.ElementType; url?: string }[] = [
   { title: "Home", id: "home", icon: Home },
   { title: "About", id: "about", icon: User },
   { title: "Projects", id: "projects", icon: Briefcase },
@@ -92,7 +93,7 @@ export function AppSidebar() {
             return (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
-                  onClick={() => scrollToSection(item.id, (item as any).url)}
+                  onClick={() => scrollToSection(item.id, item.url)}
                   className={`
                     relative group transition-all duration-300 mx-2 rounded-xl py-3
                     ${isActive

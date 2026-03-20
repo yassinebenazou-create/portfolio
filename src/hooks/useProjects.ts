@@ -19,8 +19,12 @@ export function useProjects() {
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    const refresh = () => setRefreshKey(k => k + 1);
 
     useEffect(() => {
+        setLoading(true);
         async function fetchProjects() {
             try {
                 const q = query(collection(db, 'projects'), orderBy('created_at', 'desc'));
@@ -29,13 +33,12 @@ export function useProjects() {
                 setProjects(data);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch projects');
-                console.error('Error fetching projects:', err);
             } finally {
                 setLoading(false);
             }
         }
         fetchProjects();
-    }, []);
+    }, [refreshKey]);
 
-    return { projects, loading, error };
+    return { projects, loading, error, refresh };
 }

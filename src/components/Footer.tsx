@@ -1,12 +1,13 @@
 import { Heart, Code } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { profile } = useProfile();
 
-  const fullName = profile?.full_name || "Shanto Joseph";
-  const role = profile?.role || "Full-Stack Developer";
+  const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
+  const role = profile?.role || DEFAULT_PROFILE.role;
 
   return (
     <footer className="py-8 px-4 bg-transparent">

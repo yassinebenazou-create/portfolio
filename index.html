@@ -41,25 +41,47 @@
   <meta property="og:url" content="https://shantojoseph.com/" />
   <meta property="og:title" content="Shanto Joseph | Full-Stack Developer" />
   <meta property="og:description" content="Full-Stack Developer building innovative web applications." />
+  <meta property="og:image" content="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
 
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://shantojoseph.com/" />
   <meta name="twitter:title" content="Shanto Joseph | Full-Stack Developer" />
   <meta name="twitter:description" content="Full-Stack Developer building innovative web applications." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Shanto Joseph",
-    "url": "https://shantojoseph.com",
-    "jobTitle": "Full-Stack Developer",
-    "description": "Full-Stack Developer building innovative web applications",
-    "sameAs": [
-      "https://www.linkedin.com/in/shanto-joseph",
-      "https://github.com/shanto-joseph"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://shantojoseph.com/#person",
+        "name": "Shanto Joseph",
+        "url": "https://shantojoseph.com",
+        "jobTitle": "Full-Stack Developer",
+        "description": "Full-Stack Developer building innovative web applications with React, Python, Java, and AI/ML.",
+        "email": "shantojoseph23@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Ernakulam",
+          "addressCountry": "IN"
+        },
+        "sameAs": [
+          "https://www.linkedin.com/in/shanto-joseph",
+          "https://github.com/shanto-joseph"
+        ],
+        "knowsAbout": ["React", "TypeScript", "Python", "Java", "Firebase", "AI/ML", "Full-Stack Development"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://shantojoseph.com/#website",
+        "url": "https://shantojoseph.com",
+        "name": "Shanto Joseph | Full-Stack Developer",
+        "description": "Full-Stack Developer building innovative web applications.",
+        "author": { "@id": "https://shantojoseph.com/#person" }
+      }
     ]
   }
   </script>

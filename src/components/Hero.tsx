@@ -8,28 +8,29 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import StarBorder from "@/components/ui/star-border";
 import { motion } from "framer-motion";
 import { slideInFromLeft, slideInFromTop, slideInFromRight } from "@/lib/motion";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
 const Hero = () => {
   const [isEmailSheetOpen, setIsEmailSheetOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { profile } = useProfile();
+  const { profile, loading: profileLoading } = useProfile();
   const { themeColor } = useThemeColor();
 
-  const fullName = profile?.full_name || "Shanto Joseph";
+  const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
   const nameParts = fullName.split(" ");
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(" ");
-  const role = profile?.role || "Full-Stack Developer";
-  const bio = profile?.bio || "Turning ideas into interactive, dynamic, and scalable digital experiences.";
-  const email = profile?.email || "shantojoseph23@gmail.com";
-  const github = profile?.github || "https://github.com/shanto-joseph";
-  const linkedin = profile?.linkedin || "https://www.linkedin.com/in/shanto-joseph";
+  const role = profile?.role || DEFAULT_PROFILE.role;
+  const bio = profile?.bio || DEFAULT_PROFILE.bio;
+  const email = profile?.email || DEFAULT_PROFILE.email;
+  const github = profile?.github || DEFAULT_PROFILE.github;
+  const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;
 
   const colorMap = {
     green: "hsl(120, 61%, 34%)",
@@ -49,10 +50,10 @@ const Hero = () => {
     try {
       await navigator.clipboard.writeText(email);
       setCopied(true);
-      toast.success("Email copied to clipboard!");
+      gooeyToast.success("Email copied to clipboard!");
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast.error("Failed to copy email");
+    } catch {
+      gooeyToast.error("Failed to copy email");
     }
   };
 
@@ -73,17 +74,25 @@ const Hero = () => {
             variants={slideInFromLeft(0.5)}
             className="text-4xl md:text-6xl font-bold text-foreground mb-2 leading-tight font-pixel transition-colors duration-500"
           >
-            <span className="Welcome-text">{firstName}</span>{" "}
-            <span className="text-primary">
-              {lastName}
-            </span>
+            {profileLoading ? (
+              <span className="inline-block w-48 h-10 bg-muted/40 rounded animate-pulse" />
+            ) : (
+              <>
+                <span className="Welcome-text">{firstName}</span>{" "}
+                <span className="text-primary">{lastName}</span>
+              </>
+            )}
           </motion.h1>
 
           <motion.p
             variants={slideInFromLeft(0.6)}
             className="text-lg md:text-xl text-muted-foreground"
           >
-            <span className="Welcome-text">{role}</span>
+            {profileLoading ? (
+              <span className="inline-block w-40 h-5 bg-muted/40 rounded animate-pulse" />
+            ) : (
+              <span className="Welcome-text">{role}</span>
+            )}
           </motion.p>
 
           <motion.p
@@ -127,6 +136,7 @@ const Hero = () => {
               href={github}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub profile"
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
               <Github className="w-7 h-7" />
@@ -135,12 +145,14 @@ const Hero = () => {
               href={linkedin}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn profile"
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
               <Linkedin className="w-7 h-7" />
             </a>
             <button
               onClick={() => setIsEmailSheetOpen(true)}
+              aria-label="Open email contact"
               className="text-muted-foreground hover:text-primary transition-colors duration-300"
             >
               <Mail className="w-7 h-7" />

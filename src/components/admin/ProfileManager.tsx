@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, Save, User, Github, Linkedin, Twitter, Instagram, Mail, FileText } from "lucide-react";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import { useProfile, Profile } from "@/hooks/useProfile";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -25,11 +25,11 @@ const ProfileManager = () => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const { id, ...profileData } = profile as any;
+            const { id: _id, ...profileData } = profile as Profile;
             await setDoc(doc(db, "profile", "main"), { ...profileData, updated_at: serverTimestamp() }, { merge: true });
-            toast.success("Profile updated successfully!");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to update profile");
+            gooeyToast.success("Profile updated successfully!");
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to update profile");
         } finally {
             setSubmitting(false);
         }
@@ -66,11 +66,11 @@ const ProfileManager = () => {
                                 <Input id="avatar_url" type="url" value={profile.avatar_url || ""} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} placeholder="https://..." />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="resume_url">Resume / CV URL</Label>
+                                <Label htmlFor="resume_url">Resume URL</Label>
                                 <div className="flex gap-2">
-                                    <Input id="resume_url" type="url" value={profile.resume_url || ""} onChange={(e) => setProfile({ ...profile, resume_url: e.target.value })} placeholder="https://..." />
+                                    <Input id="resume_url" type="url" value={profile.resume_url || ""} onChange={(e) => setProfile({ ...profile, resume_url: e.target.value })} placeholder="https://rxresu.me/username/resume" />
                                     <Button type="button" variant="outline" size="icon" asChild>
-                                        <a href={profile.resume_url} target="_blank" rel="noopener noreferrer"><FileText className="w-4 h-4" /></a>
+                                        <a href={profile.resume_url || "https://rxresu.me/shantojoseph23/resume"} target="_blank" rel="noopener noreferrer"><FileText className="w-4 h-4" /></a>
                                     </Button>
                                 </div>
                             </div>

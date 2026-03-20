@@ -13,8 +13,10 @@ import { useState } from "react";
 import { ProjectDetails } from "@/components/ProjectDetails";
 import { useProjects } from "@/hooks/useProjects";
 
+import { Project } from "@/hooks/useProjects";
+
 const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const { projects, loading, error } = useProjects();
 
   const featuredProjects = projects.filter(project => project.featured);
@@ -70,6 +72,10 @@ const Projects = () => {
                       <img
                         src={project.image}
                         alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        width={600}
+                        height={192}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-60"></div>

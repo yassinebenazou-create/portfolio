@@ -44,3 +44,32 @@ src/lib/supabase.ts
 *.njsproj
 *.sln
 *.sw?
+.vscode
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Build artifacts
+*.tsbuildinfo
+build/
+out/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+
+# Firebase local emulator
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# TODO (tracked separately, remove this line if you want to commit it)
+TODO.md
+test.md

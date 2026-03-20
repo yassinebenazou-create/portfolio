@@ -8,10 +8,57 @@ import Footer from "@/components/Footer";
 import { useState } from "react";
 import { ProjectDetails } from "@/components/ProjectDetails";
 import { useProjects } from "@/hooks/useProjects";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { SITE } from "@/lib/config";
+import { useEffect } from "react";
+
+import { Project } from "@/hooks/useProjects";
+
+function injectProjectsJsonLd(projects: Project[]) {
+  const id = "jsonld-projects";
+  let el = document.getElementById(id) as HTMLScriptElement | null;
+  if (!el) {
+    el = document.createElement("script");
+    el.id = id;
+    el.type = "application/ld+json";
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Projects by Shanto Joseph",
+    "url": `${SITE.url}/projects`,
+    "itemListElement": projects.map((p, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": {
+        "@type": "SoftwareSourceCode",
+        "name": p.title,
+        "description": p.description,
+        "codeRepository": p.github,
+        "url": p.live || p.github,
+        "image": p.image,
+        "programmingLanguage": p.tech,
+        "author": { "@id": `${SITE.url}/#person` },
+      },
+    })),
+  });
+}
 
 const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const { projects, loading, error } = useProjects();
+
+  usePageMeta({
+    title: `Projects | ${SITE.title}`,
+    description: "A complete collection of my work — from web applications to AI-powered solutions.",
+    url: `${SITE.url}/projects`,
+  });
+
+  useEffect(() => {
+    if (projects.length > 0) injectProjectsJsonLd(projects);
+    return () => { document.getElementById("jsonld-projects")?.remove(); };
+  }, [projects]);
 
   return (
     <>
@@ -70,6 +117,10 @@ const Projects = () => {
                         <img
                           src={project.image}
                           alt={project.title}
+                          loading="lazy"
+                          decoding="async"
+                          width={600}
+                          height={192}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-60"></div>

@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, Loader2, Search, ImagePlus, X } from "lucide-react";
 import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import { useProjects } from "@/hooks/useProjects";
 
 const COMMON_TECH = [
@@ -20,10 +20,12 @@ const COMMON_TECH = [
     "Redis", "Kubernetes", "Terraform", "Go", "Rust", "PHP", "Laravel"
 ];
 
+import { Project } from "@/hooks/useProjects";
+
 const ProjectsManager = () => {
-    const { projects, loading, error } = useProjects();
+    const { projects, loading, error, refresh } = useProjects();
     const [open, setOpen] = useState(false);
-    const [editingProject, setEditingProject] = useState<any>(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [techInput, setTechInput] = useState("");
@@ -54,7 +56,7 @@ const ProjectsManager = () => {
         setTechInput("");
     };
 
-    const handleEdit = (project: any) => {
+    const handleEdit = (project: Project) => {
         setEditingProject(project);
         setFormData({
             title: project.title,
@@ -88,18 +90,17 @@ const ProjectsManager = () => {
 
             if (editingProject) {
                 await updateDoc(doc(db, "projects", editingProject.id), projectData);
-                toast.success("Project updated successfully!");
+                gooeyToast.success("Project updated successfully!");
             } else {
                 await addDoc(collection(db, "projects"), { ...projectData, created_at: serverTimestamp() });
-                toast.success("Project created successfully!");
+                gooeyToast.success("Project created successfully!");
             }
 
             setOpen(false);
             resetForm();
-            window.location.reload();
-        } catch (error: any) {
-            console.error("Error saving project:", error);
-            toast.error(error.message || "Failed to save project");
+            refresh();
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to save project");
         } finally {
             setSubmitting(false);
         }
@@ -110,10 +111,10 @@ const ProjectsManager = () => {
 
         try {
             await deleteDoc(doc(db, "projects", id));
-            toast.success("Project deleted successfully!");
-            window.location.reload();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete project");
+            gooeyToast.success("Project deleted successfully!");
+            refresh();
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to delete project");
         }
     };
 
@@ -342,6 +343,8 @@ const ProjectsManager = () => {
                                     <img
                                         src={project.image}
                                         alt={project.title}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="w-full h-full object-cover"
                                     />
                                 </div>

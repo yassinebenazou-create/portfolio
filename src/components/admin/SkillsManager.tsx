@@ -8,13 +8,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Pencil, Trash2, Loader2, Search, X } from "lucide-react";
 import { collection, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import { useSkills } from "@/hooks/useSkills";
 
+import { Skill } from "@/hooks/useSkills";
+
 const SkillsManager = () => {
-    const { skills, loading, error } = useSkills();
+    const { skills, loading, error, refresh } = useSkills();
     const [open, setOpen] = useState(false);
-    const [editingSkill, setEditingSkill] = useState<any>(null);
+    const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -32,7 +34,7 @@ const SkillsManager = () => {
         setEditingSkill(null);
     };
 
-    const handleEdit = (skill: any) => {
+    const handleEdit = (skill: Skill) => {
         setEditingSkill(skill);
         setFormData({
             name: skill.name,
@@ -53,17 +55,17 @@ const SkillsManager = () => {
 
             if (editingSkill) {
                 await updateDoc(doc(db, "skills", editingSkill.id), skillData);
-                toast.success("Skill updated successfully!");
+                gooeyToast.success("Skill updated successfully!");
             } else {
                 await addDoc(collection(db, "skills"), skillData);
-                toast.success("Skill created successfully!");
+                gooeyToast.success("Skill created successfully!");
             }
 
             setOpen(false);
             resetForm();
-            window.location.reload();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to save skill");
+            refresh();
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to save skill");
         } finally {
             setSubmitting(false);
         }
@@ -74,10 +76,10 @@ const SkillsManager = () => {
 
         try {
             await deleteDoc(doc(db, "skills", id));
-            toast.success("Skill deleted successfully!");
-            window.location.reload();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete skill");
+            gooeyToast.success("Skill deleted successfully!");
+            refresh();
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to delete skill");
         }
     };
 
@@ -86,11 +88,11 @@ const SkillsManager = () => {
 
         try {
             await Promise.all(selectedSkills.map(id => deleteDoc(doc(db, "skills", id))));
-            toast.success("Skills deleted successfully!");
+            gooeyToast.success("Skills deleted successfully!");
             setSelectedSkills([]);
-            window.location.reload();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete skills");
+            refresh();
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to delete skills");
         }
     };
 
@@ -242,7 +244,7 @@ const SkillsManager = () => {
 
             {filteredSkills.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {filteredSkills.map((skill: any) => (
+                    {filteredSkills.map((skill) => (
                         <div
                             key={skill.id}
                             className={`group relative flex flex-col items-center justify-center p-6 bg-card hover:bg-accent/50 border rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden ${selectedSkills.includes(skill.id) ? 'ring-2 ring-primary bg-accent/50' : ''}`}

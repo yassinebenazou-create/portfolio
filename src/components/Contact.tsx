@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, Copy, MapPin } from "lucide-react";
+import { Github, Linkedin, Mail, Copy, MapPin, Loader2 } from "lucide-react";
 import { useState, useRef } from "react";
-import { toast } from "sonner";
+import { gooeyToast } from "goey-toast";
 import emailjs from "@emailjs/browser";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
 const Contact = () => {
   const { profile } = useProfile();
@@ -15,14 +16,21 @@ const Contact = () => {
     email: "",
     message: ""
   });
+  const [sending, setSending] = useState(false);
 
-  const email = profile?.email || "shantojoseph23@gmail.com";
-  const github = profile?.github || "https://github.com/shanto-joseph";
-  const linkedin = profile?.linkedin || "https://www.linkedin.com/in/shanto-joseph/";
+  const email = profile?.email || DEFAULT_PROFILE.email;
+  const github = profile?.github || DEFAULT_PROFILE.github;
+  const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      gooeyToast.error("Please enter a valid email address.");
+      return;
+    }
     if (form.current) {
+      setSending(true);
       emailjs
         .sendForm(
           import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -32,24 +40,23 @@ const Contact = () => {
         )
         .then(
           () => {
-            toast.success("Message sent! I'll get back to you soon.");
+            gooeyToast.success("Message sent! I'll get back to you soon.");
             setFormData({ name: "", email: "", message: "" });
           },
-          (error) => {
-            console.log("FAILED...", error.text);
-            toast.error("Failed to send message. Please try again later.");
+          () => {
+            gooeyToast.error("Failed to send message. Please try again later.");
           }
-        );
+        )
+        .finally(() => setSending(false));
     }
   };
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(email);
-      toast.success("Email copied to clipboard!");
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-      toast.error("Failed to copy email.");
+      gooeyToast.success("Email copied to clipboard!");
+    } catch {
+      gooeyToast.error("Failed to copy email.");
     }
   };
 
@@ -120,8 +127,13 @@ const Contact = () => {
                   />
                 </div>
 
-                <Button type="submit" className="w-full" size="lg">
-                  Send Message
+                <Button type="submit" className="w-full" size="lg" disabled={sending}>
+                  {sending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : "Send Message"}
                 </Button>
               </form>
             </div>

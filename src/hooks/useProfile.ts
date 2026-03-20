@@ -35,7 +35,6 @@ export function useProfile() {
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch profile');
-                console.error('Error fetching profile:', err);
             } finally {
                 setLoading(false);
             }
