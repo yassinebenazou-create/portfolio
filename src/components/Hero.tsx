@@ -19,7 +19,7 @@ import { DEFAULT_PROFILE } from "@/lib/config";
 const Hero = () => {
   const [isEmailSheetOpen, setIsEmailSheetOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { profile, loading: profileLoading } = useProfile();
+  const { profile } = useProfile();
   const { themeColor } = useThemeColor();
 
   const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
@@ -74,25 +74,15 @@ const Hero = () => {
             variants={slideInFromLeft(0.5)}
             className="text-4xl md:text-6xl font-bold text-foreground mb-2 leading-tight font-pixel transition-colors duration-500"
           >
-            {profileLoading ? (
-              <span className="inline-block w-48 h-10 bg-muted/40 rounded animate-pulse" />
-            ) : (
-              <>
-                <span className="Welcome-text">{firstName}</span>{" "}
-                <span className="text-primary">{lastName}</span>
-              </>
-            )}
+            <span className="Welcome-text">{firstName}</span>{" "}
+            <span className="text-primary">{lastName}</span>
           </motion.h1>
 
           <motion.p
             variants={slideInFromLeft(0.6)}
             className="text-lg md:text-xl text-muted-foreground"
           >
-            {profileLoading ? (
-              <span className="inline-block w-40 h-5 bg-muted/40 rounded animate-pulse" />
-            ) : (
-              <span className="Welcome-text">{role}</span>
-            )}
+            <span className="Welcome-text">{role}</span>
           </motion.p>
 
           <motion.p
@@ -170,6 +160,7 @@ const Hero = () => {
             alt="Hero background"
             className="select-none pointer-events-none w-full h-auto animate-float"
             style={{ willChange: "transform" }}
+            fetchPriority="high"
             draggable={false}
           />
         </motion.div>
