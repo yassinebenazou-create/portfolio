@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" class="dark" style="color-scheme: dark;">
+
+<head>
+  <!-- Base Theme Styles (Prevents White Flash) -->
+  <style>
+    html {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    html.dark {
+      background-color: #000000;
+      color: #ffffff;
+    }
+  </style>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml"
+    href="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
+
+  <!-- Primary Meta Tags -->
+  <title>Shanto Joseph | Full-Stack Developer</title>
+  <meta name="title" content="Shanto Joseph | Full-Stack Developer" />
+  <meta name="description" content="Full-Stack Developer building innovative web applications." />
+  <meta name="author" content="Shanto Joseph" />
+  <meta name="keywords"
+    content="Shanto Joseph, shantojoseph, shanto-joseph, Shanto Joseph portfolio, Shanto Joseph website, Full-Stack Developer, React Developer, Python Developer, AI/ML Engineer, TypeScript, Java, Web Development, Portfolio, Software Engineer" />
+  <link rel="canonical" href="https://shantojoseph.com/" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap"
+    rel="stylesheet">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://shantojoseph.com/" />
+  <meta property="og:title" content="Shanto Joseph | Full-Stack Developer" />
+  <meta property="og:description" content="Full-Stack Developer building innovative web applications." />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:url" content="https://shantojoseph.com/" />
+  <meta name="twitter:title" content="Shanto Joseph | Full-Stack Developer" />
+  <meta name="twitter:description" content="Full-Stack Developer building innovative web applications." />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Shanto Joseph",
+    "url": "https://shantojoseph.com",
+    "jobTitle": "Full-Stack Developer",
+    "description": "Full-Stack Developer building innovative web applications",
+    "sameAs": [
+      "https://www.linkedin.com/in/shanto-joseph",
+      "https://github.com/shanto-joseph"
+    ]
+  }
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4GLJ46MYEP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-4GLJ46MYEP');
+  </script>
+
+  <!-- Prevent FOUC (Flash of Unstyled Content) -->
+
+  <!-- Prevent FOUC (Flash of Unstyled Content) -->
+  <script>
+    (function () {
+      try {
+        var themeMode = '%VITE_THEME_MODE%';
+        var theme = localStorage.getItem('theme');
+        var isDark = false;
+
+        if (themeMode !== 'true') {
+          isDark = true;
+        } else if (theme === 'dark' || (!theme || theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          isDark = true;
+        }
+
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.backgroundColor = '#000000';
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.backgroundColor = '#ffffff';
+        }
+      } catch (e) { }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
