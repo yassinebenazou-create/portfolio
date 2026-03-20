@@ -1,24 +1,29 @@
-# Portfolio
+# Shanto Joseph — Portfolio
 
-A personal portfolio website built with React, Firebase, and Tailwind CSS. Features a dynamic admin dashboard to manage projects, skills, and profile content in real time.
+Personal portfolio website built with React + Firebase. Features a live admin dashboard to manage content in real time.
+
+🌐 **Live:** [shantojoseph.com](https://shantojoseph.com)
 
 ## Tech Stack
 
-- **React 18** + **TypeScript**
-- **Vite** — build tool
-- **Tailwind CSS** + **shadcn/ui** — styling and components
-- **Firebase** — Firestore (database), Auth (Google OAuth)
+- **React 18** + **TypeScript** + **Vite**
+- **Tailwind CSS** + **shadcn/ui**
+- **Firebase** — Firestore + Google Auth
 - **Framer Motion** — animations
+- **Three.js** + **Vanta.js** — hero background
+- **goey-toast** — notifications
 - **EmailJS** — contact form
 - **Cloudflare Pages** — hosting
 
 ## Features
 
-- Responsive portfolio with hero, about, skills, projects, and contact sections
-- Admin dashboard at `/razer` (Google OAuth, email whitelist)
-- Manage projects, skills, and profile from the dashboard
-- Analytics via Google Looker Studio embed
-- Dark/light theme toggle
+- Responsive sections: Hero, About, Skills, Projects, Contact
+- Admin dashboard at `/razer` — manage projects, skills, profile via Firestore
+- Google OAuth with email whitelist
+- Analytics embed (Google Looker Studio)
+- Theme color picker + dark mode
+- SEO: JSON-LD schema, Open Graph, sitemap, canonical tags
+- Performance: lazy-loaded routes, code splitting, 5min query cache
 
 ## Getting Started
 
@@ -27,7 +32,7 @@ npm install
 npm run dev
 ```
 
-Create a `.env` file based on `.env.example` and fill in your Firebase credentials.
+Copy `.env.example` to `.env` and fill in your credentials.
 
 ## Environment Variables
 
@@ -44,11 +49,12 @@ VITE_EMAILJS_SERVICE_ID=
 VITE_EMAILJS_TEMPLATE_ID=
 VITE_EMAILJS_PUBLIC_KEY=
 VITE_ANALYTICS_EMBED_URL=
+VITE_THEME_MODE=
 ```
 
 ## Deployment
 
-Hosted on **Cloudflare Pages**.
+Hosted on **Cloudflare Pages** with automatic deployments from `main`.
 
 - Build command: `npm run build`
 - Output directory: `dist`
@@ -56,4 +62,3 @@ Hosted on **Cloudflare Pages**.
 ## License
 
 MIT
-
