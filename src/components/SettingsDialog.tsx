@@ -44,6 +44,7 @@ export function SettingsDialog({ variant = "icon", open, onOpenChange, children 
           <Button
             variant="ghost"
             size="icon"
+            aria-label="Open settings"
             className="h-12 w-12 rounded-xl transition-all duration-300 hover:bg-muted/60 text-muted-foreground hover:text-foreground group"
           >
             <Settings className="h-5 w-5 animate-spin-slow" strokeWidth={2} />
@@ -87,6 +88,7 @@ export function SettingsDialog({ variant = "icon", open, onOpenChange, children 
                   <button
                     key={option.value}
                     onClick={() => setThemeColor(option.value)}
+                    aria-label={`Set theme color to ${option.name}`}
                     className={`
                       relative h-10 w-10 rounded-full transition-all duration-300
                       ${themeColor === option.value ? "scale-110" : "hover:scale-105"}

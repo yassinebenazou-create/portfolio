@@ -169,6 +169,7 @@ const Hero = () => {
             src="/hero-bg.svg"
             alt="Hero background"
             className="select-none pointer-events-none w-full h-auto animate-float"
+            style={{ willChange: "transform" }}
             draggable={false}
           />
         </motion.div>

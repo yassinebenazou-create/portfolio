@@ -25,7 +25,7 @@ export function useAppConfig() {
                 setConfig(configMap);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch config');
-                console.error('Error fetching config:', err);
+                // silently handle config fetch error
             } finally {
                 setLoading(false);
             }
