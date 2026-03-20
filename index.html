@@ -17,8 +17,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/svg+xml"
-    href="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <!-- Primary Meta Tags -->
   <title>Shanto Joseph | Full-Stack Developer</title>
@@ -31,6 +30,13 @@
 
   <!-- Preload critical assets -->
   <link rel="preload" href="/hero-bg.svg" as="image" type="image/svg+xml" />
+
+  <!-- DNS prefetch for external origins -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+  <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
+  <link rel="dns-prefetch" href="https://api.emailjs.com" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,14 +51,14 @@
   <meta property="og:url" content="https://shantojoseph.com/" />
   <meta property="og:title" content="Shanto Joseph | Full-Stack Developer" />
   <meta property="og:description" content="Full-Stack Developer building innovative web applications." />
-  <meta property="og:image" content="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
+  <meta property="og:image" content="https://shantojoseph.com/favicon.svg" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://shantojoseph.com/" />
   <meta name="twitter:title" content="Shanto Joseph | Full-Stack Developer" />
   <meta name="twitter:description" content="Full-Stack Developer building innovative web applications." />
-  <meta name="twitter:image" content="https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg" />
+  <meta name="twitter:image" content="https://shantojoseph.com/favicon.svg" />
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
@@ -90,14 +96,19 @@
   }
   </script>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4GLJ46MYEP"></script>
+  <!-- Google tag (gtag.js) — deferred to avoid TBT impact -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-4GLJ46MYEP');
+    // Load gtag script after page is interactive
+    window.addEventListener('load', function () {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-4GLJ46MYEP';
+      document.head.appendChild(s);
+    });
   </script>
 
   <!-- Prevent FOUC (Flash of Unstyled Content) -->

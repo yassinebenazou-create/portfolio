@@ -22,7 +22,7 @@ const VantaBackground = () => {
         const effect = FOG({
             el: vantaRef.current,
             THREE: THREE,
-            mouseControls: true,
+            mouseControls: !('ontouchstart' in window),
             touchControls: true,
             gyroControls: false,
             minHeight: 200.00,

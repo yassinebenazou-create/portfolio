@@ -19,5 +19,5 @@ export const SITE = {
   url: "https://shantojoseph.com",
   title: "Shanto Joseph | Full-Stack Developer",
   description: "Full-Stack Developer building innovative web applications with React, Python, Java, and AI/ML.",
-  ogImage: "https://res.cloudinary.com/dk6i1ld2q/image/upload/v1763925337/s_3_kq7f8b.svg",
+  ogImage: "https://shantojoseph.com/favicon.svg",
 } as const;

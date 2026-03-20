@@ -4,7 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Github, Linkedin, Mail, Copy, MapPin, Loader2 } from "lucide-react";
 import { useState, useRef } from "react";
 import { gooeyToast } from "goey-toast";
-import emailjs from "@emailjs/browser";
 import { useProfile } from "@/hooks/useProfile";
 import { DEFAULT_PROFILE } from "@/lib/config";
 
@@ -31,23 +30,25 @@ const Contact = () => {
     }
     if (form.current) {
       setSending(true);
-      emailjs
-        .sendForm(
-          import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-          form.current,
-          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-        )
-        .then(
-          () => {
-            gooeyToast.success("Message sent! I'll get back to you soon.");
-            setFormData({ name: "", email: "", message: "" });
-          },
-          () => {
-            gooeyToast.error("Failed to send message. Please try again later.");
-          }
-        )
-        .finally(() => setSending(false));
+      import("@emailjs/browser").then(({ default: emailjs }) => {
+        emailjs
+          .sendForm(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            form.current!,
+            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+          )
+          .then(
+            () => {
+              gooeyToast.success("Message sent! I'll get back to you soon.");
+              setFormData({ name: "", email: "", message: "" });
+            },
+            () => {
+              gooeyToast.error("Failed to send message. Please try again later.");
+            }
+          )
+          .finally(() => setSending(false));
+      });
     }
   };
 
