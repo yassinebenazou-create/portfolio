@@ -9,8 +9,10 @@ import { useState } from "react";
 import { ProjectDetails } from "@/components/ProjectDetails";
 import { useProjects } from "@/hooks/useProjects";
 
+import { Project } from "@/hooks/useProjects";
+
 const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const { projects, loading, error } = useProjects();
 
   return (

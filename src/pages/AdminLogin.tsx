@@ -21,9 +21,9 @@ const AdminLogin = () => {
                 return;
             }
             navigate("/razer/dashboard");
-        } catch (error: any) {
-            if (error.code !== "auth/popup-closed-by-user") {
-                gooeyToast.error(error.message || "Google login failed");
+        } catch (error: unknown) {
+            if ((error as { code?: string }).code !== "auth/popup-closed-by-user") {
+                gooeyToast.error(error instanceof Error ? error.message : "Google login failed");
             }
         }
     };

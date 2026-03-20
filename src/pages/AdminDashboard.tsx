@@ -15,9 +15,11 @@ import { useProjects } from "@/hooks/useProjects";
 import { useSkills } from "@/hooks/useSkills";
 import { SettingsDialog } from "@/components/SettingsDialog";
 
+import { User as FirebaseUser } from "firebase/auth";
+
 const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<FirebaseUser | null>(null);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { projects } = useProjects();
@@ -49,7 +51,7 @@ const AdminDashboard = () => {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>;
 
-    const featuredProjectsCount = projects.filter((p: any) => p.featured).length;
+    const featuredProjectsCount = projects.filter((p) => p.featured).length;
 
     return (
         <div className="min-h-screen bg-transparent p-4 md:p-8">

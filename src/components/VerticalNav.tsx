@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { Home, Briefcase, Code, PenTool, Mail } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { SettingsDialog } from "@/components/SettingsDialog";
 
-const navItems = [
+const navItems: { title: string; id: string; icon: React.ElementType; url?: string }[] = [
   { title: "Home", id: "home", icon: Home },
   { title: "Projects", id: "projects", icon: Briefcase },
   { title: "Skills", id: "skills", icon: Code },
@@ -76,7 +77,7 @@ export function VerticalNav() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => scrollToSection(item.id, (item as any).url)}
+                  onClick={() => scrollToSection(item.id, item.url)}
                   className={`
                     relative h-12 w-12 rounded-xl transition-all duration-300
                     ${isActive

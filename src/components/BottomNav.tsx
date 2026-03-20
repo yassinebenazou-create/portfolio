@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import React from "react";
 import { Home, Briefcase, Code, PenTool, Mail } from "lucide-react";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { useHaptics } from "@/hooks/useHaptics";
 
-const navItems = [
+const navItems: { title: string; id: string; icon: React.ElementType; url?: string }[] = [
   { title: "Home", id: "home", icon: Home },
   { title: "Projects", id: "projects", icon: Briefcase },
   { title: "Skills", id: "skills", icon: Code },
@@ -105,7 +106,7 @@ export function BottomNav() {
               return (
                 <button
                   key={item.id}
-                  onClick={() => scrollToSection(item.id, (item as any).url)}
+                  onClick={() => scrollToSection(item.id, item.url)}
                   className="p-2.5 rounded-full transition-all duration-300 hover:bg-muted/60 text-muted-foreground hover:text-foreground"
                   aria-label={item.title}
                 >

@@ -25,11 +25,11 @@ const ProfileManager = () => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const { id, ...profileData } = profile as any;
+            const { id: _id, ...profileData } = profile as Profile;
             await setDoc(doc(db, "profile", "main"), { ...profileData, updated_at: serverTimestamp() }, { merge: true });
             gooeyToast.success("Profile updated successfully!");
-        } catch (error: any) {
-            gooeyToast.error(error.message || "Failed to update profile");
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to update profile");
         } finally {
             setSubmitting(false);
         }

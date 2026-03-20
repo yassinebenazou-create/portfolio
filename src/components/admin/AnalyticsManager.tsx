@@ -42,8 +42,8 @@ const AnalyticsManager = () => {
             localStorage.setItem("analytics_embed_url", embedUrl);
             setIsEditing(false);
             gooeyToast.success("Analytics URL saved!");
-        } catch (err: any) {
-            gooeyToast.error(err.message || "Failed to save configuration");
+        } catch (err: unknown) {
+            gooeyToast.error(err instanceof Error ? err.message : "Failed to save configuration");
         } finally {
             setSaving(false);
         }

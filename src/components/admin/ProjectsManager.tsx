@@ -20,10 +20,12 @@ const COMMON_TECH = [
     "Redis", "Kubernetes", "Terraform", "Go", "Rust", "PHP", "Laravel"
 ];
 
+import { Project } from "@/hooks/useProjects";
+
 const ProjectsManager = () => {
     const { projects, loading, error, refresh } = useProjects();
     const [open, setOpen] = useState(false);
-    const [editingProject, setEditingProject] = useState<any>(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [techInput, setTechInput] = useState("");
@@ -54,7 +56,7 @@ const ProjectsManager = () => {
         setTechInput("");
     };
 
-    const handleEdit = (project: any) => {
+    const handleEdit = (project: Project) => {
         setEditingProject(project);
         setFormData({
             title: project.title,
@@ -97,8 +99,8 @@ const ProjectsManager = () => {
             setOpen(false);
             resetForm();
             refresh();
-        } catch (error: any) {
-            gooeyToast.error(error.message || "Failed to save project");
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to save project");
         } finally {
             setSubmitting(false);
         }
@@ -111,8 +113,8 @@ const ProjectsManager = () => {
             await deleteDoc(doc(db, "projects", id));
             gooeyToast.success("Project deleted successfully!");
             refresh();
-        } catch (error: any) {
-            gooeyToast.error(error.message || "Failed to delete project");
+        } catch (error: unknown) {
+            gooeyToast.error(error instanceof Error ? error.message : "Failed to delete project");
         }
     };
 

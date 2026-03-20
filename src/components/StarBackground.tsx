@@ -9,7 +9,7 @@ import * as random from "maath/random";
 import { useState, useRef, Suspense } from "react";
 import type { Points as PointsType } from "three";
 
-export const StarBackground = (props: any) => {
+export const StarBackground = (props: Record<string, unknown>) => {
   const ref = useRef<PointsType | null>(null);
   const [sphere] = useState(() =>
     random.inSphere(new Float32Array(5001), { radius: 1.2 }),
