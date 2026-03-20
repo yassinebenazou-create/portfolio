@@ -9,14 +9,13 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { GooeyToaster } from "goey-toast";
 import "goey-toast/styles.css";
 import Index from "./pages/Index";
+import VantaBackground from "@/components/VantaBackground";
+import StarsCanvas from "@/components/StarBackground";
 
 const Projects = lazy(() => import("./pages/Projects"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-
-const VantaBackground = lazy(() => import("@/components/VantaBackground"));
-const StarsCanvas = lazy(() => import("@/components/StarBackground"));
 
 // Skip stars on low-end devices (< 4 cores or < 4GB RAM) to avoid double WebGL overhead
 const isLowEnd =
@@ -47,10 +46,10 @@ function AppContent() {
     <>
       <div className="fixed inset-0 pointer-events-none z-[100] bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
       {isHome && (
-        <Suspense fallback={null}>
+        <>
           <VantaBackground />
           {!isLowEnd && <StarsCanvas />}
-        </Suspense>
+        </>
       )}
       <Toaster />
       <GooeyToaster position="bottom-right" theme="dark" preset="bouncy" />
