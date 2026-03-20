@@ -44,7 +44,7 @@ src/lib/supabase.ts
 *.njsproj
 *.sln
 *.sw?
-
+.vscode
 # OS files
 Thumbs.db
 ehthumbs.db
