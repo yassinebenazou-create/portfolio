@@ -18,6 +18,11 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 import VantaBackground from "@/components/VantaBackground";
 import StarsCanvas from "@/components/StarBackground";
 
+// Skip stars on low-end devices (< 4 cores or < 4GB RAM) to avoid double WebGL overhead
+const isLowEnd =
+  (navigator.hardwareConcurrency ?? 8) < 4 ||
+  ((navigator as { deviceMemory?: number }).deviceMemory ?? 8) < 4;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -40,7 +45,7 @@ function AppContent() {
     <>
       <div className="fixed inset-0 pointer-events-none z-[100] bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
       <VantaBackground />
-      <StarsCanvas />
+      {!isLowEnd && <StarsCanvas />}
       <Toaster />
       <GooeyToaster position="bottom-right" theme="dark" preset="bouncy" />
       <BrowserRouter>

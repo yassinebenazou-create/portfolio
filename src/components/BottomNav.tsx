@@ -82,7 +82,6 @@ export function BottomNav() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const activeItem = navItems.find(item => item.id === activeSection);
 
   return (
     <div
@@ -90,42 +89,41 @@ export function BottomNav() {
         }`}
     >
       <nav className="glass-card border border-border/50 rounded-[2rem] px-6 py-4 shadow-[0_8px_32px_hsl(0_0%_0%_/_0.15)]">
-        <div className="flex items-center justify-between gap-2">
-          {/* Active section with icon and name */}
-          {activeItem && (
-            <div className="flex items-center gap-2 bg-muted/60 text-primary px-4 py-2 rounded-full">
-              <activeItem.icon className="h-5 w-5 transition-transform duration-300 hover:scale-110" strokeWidth={2.5} />
-              <span className="font-medium text-sm">{activeItem.title}</span>
-            </div>
-          )}
+        <div className="flex items-center justify-between gap-1">
+          {navItems.map((item) => {
+            const isActive = item.id === activeSection;
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id, item.url)}
+                aria-label={item.title}
+                className={`flex items-center gap-2 rounded-full transition-all duration-300
+                  ${isActive
+                    ? "bg-muted/60 text-primary px-4 py-2"
+                    : "p-2.5 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  }`}
+              >
+                <item.icon
+                  className="h-5 w-5 flex-shrink-0 transition-transform duration-300 hover:scale-110"
+                  strokeWidth={isActive ? 2.5 : 2}
+                />
+                {isActive && (
+                  <span className="font-medium text-sm whitespace-nowrap">{item.title}</span>
+                )}
+              </button>
+            );
+          })}
 
-          {/* Other navigation items - icons only */}
-          <div className="flex items-center gap-1">
-            {navItems.map((item) => {
-              if (item.id === activeSection) return null;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id, item.url)}
-                  className="p-2.5 rounded-full transition-all duration-300 hover:bg-muted/60 text-muted-foreground hover:text-foreground"
-                  aria-label={item.title}
-                >
-                  <item.icon className="h-5 w-5 transition-transform duration-300 hover:scale-110" strokeWidth={2} />
-                </button>
-              );
-            })}
-
-            {/* Settings Button */}
-            <div className="ml-1">
-              <SettingsDialog
-                variant="icon"
-                open={settingsOpen}
-                onOpenChange={(val) => {
-                  if (val) haptic("light");
-                  setSettingsOpen(val);
-                }}
-              />
-            </div>
+          {/* Settings Button */}
+          <div className="ml-1">
+            <SettingsDialog
+              variant="icon"
+              open={settingsOpen}
+              onOpenChange={(val) => {
+                if (val) haptic("light");
+                setSettingsOpen(val);
+              }}
+            />
           </div>
         </div>
       </nav>
