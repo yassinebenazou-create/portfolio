@@ -89,7 +89,6 @@ const VantaBackground = () => {
         <div
             ref={vantaRef}
             className="fixed inset-0 -z-10 w-full h-full pointer-events-none"
-            style={{ willChange: "transform" }}
         />
     );
 };

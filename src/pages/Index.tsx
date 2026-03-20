@@ -1,15 +1,17 @@
+import { lazy, Suspense } from "react";
 import { VerticalNav } from "@/components/VerticalNav";
 import { BottomNav } from "@/components/BottomNav";
 import { BackToTop } from "@/components/BackToTop";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Projects from "@/components/Projects";
-import Skills from "@/components/Skills";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { SITE } from "@/lib/config";
+
+const About = lazy(() => import("@/components/About"));
+const Projects = lazy(() => import("@/components/Projects"));
+const Skills = lazy(() => import("@/components/Skills"));
+const Contact = lazy(() => import("@/components/Contact"));
 
 const Index = () => {
   usePageMeta({
@@ -28,10 +30,12 @@ const Index = () => {
 
       <main className="flex-1">
         <ErrorBoundary><Hero /></ErrorBoundary>
-        <ErrorBoundary><About /></ErrorBoundary>
-        <ErrorBoundary><Projects /></ErrorBoundary>
-        <ErrorBoundary><Skills /></ErrorBoundary>
-        <ErrorBoundary><Contact /></ErrorBoundary>
+        <Suspense fallback={<div className="h-32" />}>
+          <ErrorBoundary><About /></ErrorBoundary>
+          <ErrorBoundary><Projects /></ErrorBoundary>
+          <ErrorBoundary><Skills /></ErrorBoundary>
+          <ErrorBoundary><Contact /></ErrorBoundary>
+        </Suspense>
         <Footer />
       </main>
 
