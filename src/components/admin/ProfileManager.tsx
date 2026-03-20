@@ -66,11 +66,11 @@ const ProfileManager = () => {
                                 <Input id="avatar_url" type="url" value={profile.avatar_url || ""} onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })} placeholder="https://..." />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="resume_url">Resume / CV URL</Label>
+                                <Label htmlFor="resume_url">Resume URL</Label>
                                 <div className="flex gap-2">
-                                    <Input id="resume_url" type="url" value={profile.resume_url || ""} onChange={(e) => setProfile({ ...profile, resume_url: e.target.value })} placeholder="https://..." />
+                                    <Input id="resume_url" type="url" value={profile.resume_url || ""} onChange={(e) => setProfile({ ...profile, resume_url: e.target.value })} placeholder="https://rxresu.me/username/resume" />
                                     <Button type="button" variant="outline" size="icon" asChild>
-                                        <a href={profile.resume_url} target="_blank" rel="noopener noreferrer"><FileText className="w-4 h-4" /></a>
+                                        <a href={profile.resume_url || "https://rxresu.me/shantojoseph23/resume"} target="_blank" rel="noopener noreferrer"><FileText className="w-4 h-4" /></a>
                                     </Button>
                                 </div>
                             </div>

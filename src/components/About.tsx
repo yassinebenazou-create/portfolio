@@ -1,20 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
+
+const RESUME_URL = "https://rxresu.me/shantojoseph23/resume";
 
 const About = () => {
   const { profile } = useProfile();
 
   const fullName = profile?.full_name || "Shanto Joseph";
-  const resumeUrl = profile?.resume_url || "/cv.pdf";
+  const resumeUrl = profile?.resume_url || RESUME_URL;
   const bio = profile?.bio || "I'm a developer who bridges creativity and engineering. I love building interactive, high-performance web applications using React, Python, Java, and modern AI/ML tools.";
-
-  const handleDownloadCV = () => {
-    const link = document.createElement('a');
-    link.href = resumeUrl;
-    link.download = `${fullName.replace(" ", "_")}_CV.pdf`;
-    link.click();
-  };
 
   return (
     <section
@@ -36,12 +31,14 @@ const About = () => {
 
           <div className="flex justify-center mt-8">
             <Button
-              onClick={handleDownloadCV}
+              asChild
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 transition-all duration-300 hover:scale-105"
             >
-              <Download className="h-5 w-5" />
-              Download CV
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-5 w-5" />
+                View Resume
+              </a>
             </Button>
           </div>
         </div>

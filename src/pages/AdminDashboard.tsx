@@ -64,7 +64,15 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end flex-wrap">
                         {user && (
                             <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg bg-card/50 backdrop-blur-sm border border-primary/20">
-                                <img src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email || 'User')}&background=random`} alt="Profile" className="w-8 h-8 rounded-full ring-2 ring-primary/20" />
+                                <img 
+                                    src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'User')}&background=random&size=64`} 
+                                    alt="Profile" 
+                                    className="w-8 h-8 rounded-full ring-2 ring-primary/20 object-cover"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => {
+                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email || 'User')}&background=random&size=64`;
+                                    }}
+                                />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">{user.displayName || user.email}</span>
                                     {user.displayName && <span className="text-xs text-muted-foreground">{user.email}</span>}
