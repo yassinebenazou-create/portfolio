@@ -6,6 +6,7 @@ import { useState, useRef } from "react";
 import { gooeyToast } from "goey-toast";
 import emailjs from "@emailjs/browser";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
 const Contact = () => {
   const { profile } = useProfile();
@@ -17,9 +18,9 @@ const Contact = () => {
   });
   const [sending, setSending] = useState(false);
 
-  const email = profile?.email || "shantojoseph23@gmail.com";
-  const github = profile?.github || "https://github.com/shanto-joseph";
-  const linkedin = profile?.linkedin || "https://www.linkedin.com/in/shanto-joseph/";
+  const email = profile?.email || DEFAULT_PROFILE.email;
+  const github = profile?.github || DEFAULT_PROFILE.github;
+  const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

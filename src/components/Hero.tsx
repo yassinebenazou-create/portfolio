@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import { slideInFromLeft, slideInFromTop, slideInFromRight } from "@/lib/motion";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
 const Hero = () => {
   const [isEmailSheetOpen, setIsEmailSheetOpen] = useState(false);
@@ -21,15 +22,15 @@ const Hero = () => {
   const { profile, loading: profileLoading } = useProfile();
   const { themeColor } = useThemeColor();
 
-  const fullName = profile?.full_name || "Shanto Joseph";
+  const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
   const nameParts = fullName.split(" ");
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(" ");
-  const role = profile?.role || "Full-Stack Developer";
-  const bio = profile?.bio || "Turning ideas into interactive, dynamic, and scalable digital experiences.";
-  const email = profile?.email || "shantojoseph23@gmail.com";
-  const github = profile?.github || "https://github.com/shanto-joseph";
-  const linkedin = profile?.linkedin || "https://www.linkedin.com/in/shanto-joseph";
+  const role = profile?.role || DEFAULT_PROFILE.role;
+  const bio = profile?.bio || DEFAULT_PROFILE.bio;
+  const email = profile?.email || DEFAULT_PROFILE.email;
+  const github = profile?.github || DEFAULT_PROFILE.github;
+  const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;
 
   const colorMap = {
     green: "hsl(120, 61%, 34%)",

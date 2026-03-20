@@ -1,15 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
+import { DEFAULT_PROFILE } from "@/lib/config";
 
-const RESUME_URL = "https://rxresu.me/shantojoseph23/resume";
+const RESUME_URL = DEFAULT_PROFILE.resume_url;
 
 const About = () => {
   const { profile } = useProfile();
 
-  const fullName = profile?.full_name || "Shanto Joseph";
+  const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
   const resumeUrl = profile?.resume_url || RESUME_URL;
-  const bio = profile?.bio || "I'm a developer who bridges creativity and engineering. I love building interactive, high-performance web applications using React, Python, Java, and modern AI/ML tools.";
+  const bio = profile?.bio || DEFAULT_PROFILE.bio;
 
   return (
     <section

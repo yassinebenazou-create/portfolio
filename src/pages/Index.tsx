@@ -8,8 +8,15 @@ import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { SITE } from "@/lib/config";
 
 const Index = () => {
+  usePageMeta({
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
+  });
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       <div className="hidden xl:block">
