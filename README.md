@@ -28,7 +28,7 @@ Personal portfolio website built with React + Firebase. Features a live admin da
 ## Getting Started
 
 ```bash
-npm install
+npm install 
 npm run dev
 ```
 
