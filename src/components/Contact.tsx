@@ -2,14 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Github, Linkedin, Mail, Copy, MapPin, Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { gooeyToast } from "goey-toast";
 import { useProfile } from "@/hooks/useProfile";
 import { DEFAULT_PROFILE } from "@/lib/config";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Contact = () => {
   const { profile } = useProfile();
-  const form = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,34 +22,48 @@ const Contact = () => {
   const github = profile?.github || DEFAULT_PROFILE.github;
   const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       gooeyToast.error("Please enter a valid email address.");
       return;
     }
-    if (form.current) {
-      setSending(true);
-      import("@emailjs/browser").then(({ default: emailjs }) => {
-        emailjs
-          .sendForm(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID,
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-            form.current!,
-            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-          )
-          .then(
-            () => {
-              gooeyToast.success("Message sent! I'll get back to you soon.");
-              setFormData({ name: "", email: "", message: "" });
-            },
-            () => {
-              gooeyToast.error("Failed to send message. Please try again later.");
-            }
-          )
-          .finally(() => setSending(false));
+    setSending(true);
+
+    const createdAt = new Date().toISOString();
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    try {
+      await addDoc(collection(db, "messages"), {
+        name: trimmedName,
+        email: trimmedEmail,
+        message: trimmedMessage,
+        status: "new",
+        created_at: createdAt,
       });
+
+      const { default: emailjs } = await import("@emailjs/browser");
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          user_name: trimmedName,
+          user_email: trimmedEmail,
+          message: trimmedMessage,
+          created_at: createdAt,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      gooeyToast.success("Message sent! I'll get back to you soon.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch {
+      gooeyToast.error("Failed to send message. Please try again later.");
+    } finally {
+      setSending(false);
     }
   };
 
@@ -71,7 +86,7 @@ const Contact = () => {
           Get In Touch
         </h2>
         <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-          Have a project in mind or want to collaborate? Feel free to reach out!
+          Have a project in mind or looking to collaborate? Feel free to reach out!
         </p>
 
         <div
@@ -79,7 +94,7 @@ const Contact = () => {
         >
           {import.meta.env.VITE_EMAIL_FORM === 'true' && (
             <div className="glass-card rounded-2xl p-6 md:p-8 w-full max-w-lg md:max-w-none">
-              <form ref={form} onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Name

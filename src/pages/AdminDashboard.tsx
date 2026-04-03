@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogOut, Plus, FolderKanban, Code, Settings, BarChart3, User, LayoutDashboard } from "lucide-react";
+import { LogOut, Plus, FolderKanban, Code, Settings, BarChart3, User, LayoutDashboard, Mail } from "lucide-react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { gooeyToast } from "goey-toast";
@@ -13,7 +13,9 @@ import AnalyticsManager from "@/components/admin/AnalyticsManager";
 import ProfileManager from "@/components/admin/ProfileManager";
 import { useProjects } from "@/hooks/useProjects";
 import { useSkills } from "@/hooks/useSkills";
+import { useMessages } from "@/hooks/useMessages";
 import { SettingsDialog } from "@/components/SettingsDialog";
+import MessagesManager from "@/components/admin/MessagesManager";
 
 import { User as FirebaseUser } from "firebase/auth";
 
@@ -24,6 +26,7 @@ const AdminDashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const { projects } = useProjects();
     const { skills } = useSkills();
+    const { messages } = useMessages();
     const activeTab = searchParams.get('tab') || 'dashboard';
 
     useEffect(() => {
@@ -52,6 +55,7 @@ const AdminDashboard = () => {
     if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>;
 
     const featuredProjectsCount = projects.filter((p) => p.featured).length;
+    const newMessagesCount = messages.filter((message) => message.status === "new").length;
 
     return (
         <div className="min-h-screen bg-transparent p-4 md:p-8">
@@ -93,11 +97,12 @@ const AdminDashboard = () => {
                         <TabsTrigger value="profile" className="gap-2 flex-1 sm:flex-none"><User className="w-4 h-4" />Profile</TabsTrigger>
                         <TabsTrigger value="projects" className="gap-2 flex-1 sm:flex-none"><FolderKanban className="w-4 h-4" />Projects</TabsTrigger>
                         <TabsTrigger value="skills" className="gap-2 flex-1 sm:flex-none"><Code className="w-4 h-4" />Skills</TabsTrigger>
+                        <TabsTrigger value="messages" className="gap-2 flex-1 sm:flex-none"><Mail className="w-4 h-4" />Messages</TabsTrigger>
                         <TabsTrigger value="analytics" className="gap-2 flex-1 sm:flex-none"><BarChart3 className="w-4 h-4" />Analytics</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="dashboard" className="space-y-4 animate-in fade-in duration-500">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
                             <Card className="hover:shadow-md transition-shadow cursor-default group">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                     <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
@@ -119,6 +124,13 @@ const AdminDashboard = () => {
                                 </CardHeader>
                                 <CardContent><div className="text-2xl font-bold">{featuredProjectsCount}</div><p className="text-xs text-muted-foreground">Highlighted entries</p></CardContent>
                             </Card>
+                            <Card className="hover:shadow-md transition-shadow cursor-default group">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">New Messages</CardTitle>
+                                    <Mail className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                </CardHeader>
+                                <CardContent><div className="text-2xl font-bold">{newMessagesCount}</div><p className="text-xs text-muted-foreground">Unread contact inquiries</p></CardContent>
+                            </Card>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Card>
@@ -137,6 +149,7 @@ const AdminDashboard = () => {
                     <TabsContent value="profile" className="space-y-4 animate-in fade-in duration-500"><ProfileManager /></TabsContent>
                     <TabsContent value="projects" className="space-y-4 animate-in fade-in duration-500"><ProjectsManager /></TabsContent>
                     <TabsContent value="skills" className="space-y-4 animate-in fade-in duration-500"><SkillsManager /></TabsContent>
+                    <TabsContent value="messages" className="space-y-4 animate-in fade-in duration-500"><MessagesManager /></TabsContent>
                     <TabsContent value="analytics" className="space-y-4 animate-in fade-in duration-500"><AnalyticsManager /></TabsContent>
                 </Tabs>
             </div>
