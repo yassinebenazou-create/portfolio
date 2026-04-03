@@ -1,4 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -8,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useMessages } from "@/hooks/useMessages";
-import { Loader2, Mail, RefreshCw, Search } from "lucide-react";
+import { ContactMessage, useMessages } from "@/hooks/useMessages";
+import { Eye, Loader2, Mail, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -25,6 +32,7 @@ function formatDate(value?: string) {
 const MessagesManager = () => {
   const { messages, loading, error, refresh } = useMessages();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
 
   const query = searchQuery.trim().toLowerCase();
   const filteredMessages = !query
@@ -115,7 +123,7 @@ const MessagesManager = () => {
             Inbox
           </CardTitle>
           <CardDescription>
-            Messages are stored in Firestore and mirrored to email via Firebase Trigger Email.
+            Messages are stored in Firestore and mirrored to email through your contact flow.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -128,6 +136,7 @@ const MessagesManager = () => {
                   <TableHead>Message</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Received</TableHead>
+                  <TableHead className="text-right">Preview</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -155,6 +164,16 @@ const MessagesManager = () => {
                     <TableCell className="text-muted-foreground text-sm">
                       {formatDate(message.created_at)}
                     </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedMessage(message)}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -170,6 +189,58 @@ const MessagesManager = () => {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={!!selectedMessage}
+        onOpenChange={(open) => !open && setSelectedMessage(null)}
+      >
+        <DialogContent className="max-w-3xl">
+          {selectedMessage && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Email Preview</DialogTitle>
+                <DialogDescription>
+                  Preview how this inquiry reads before you reply.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="rounded-xl border bg-card/40 overflow-hidden">
+                <div className="border-b bg-muted/40 px-6 py-4">
+                  <p className="text-sm text-muted-foreground">From</p>
+                  <p className="font-medium">{selectedMessage.name}</p>
+                  <a
+                    href={`mailto:${selectedMessage.email}`}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    {selectedMessage.email}
+                  </a>
+                </div>
+
+                <div className="px-6 py-5 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Subject</p>
+                      <p className="font-medium">
+                        New portfolio inquiry from {selectedMessage.name}
+                      </p>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {formatDate(selectedMessage.created_at)}
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border bg-background/70 p-4">
+                    <p className="text-sm text-muted-foreground mb-2">Message</p>
+                    <p className="whitespace-pre-wrap leading-relaxed">
+                      {selectedMessage.message}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
