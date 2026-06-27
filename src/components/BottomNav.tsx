@@ -8,7 +8,6 @@ const navItems: { title: string; id: string; icon: React.ElementType; url?: stri
   { title: "Home", id: "home", icon: Home },
   { title: "Projects", id: "projects", icon: Briefcase },
   { title: "Skills", id: "skills", icon: Code },
-  { title: "Blog", id: "blog", icon: PenTool, url: "https://blog.shantojoseph.com/" },
   { title: "Contact", id: "contact", icon: Mail },
 ];
 

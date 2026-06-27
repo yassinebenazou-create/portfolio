@@ -26,7 +26,7 @@ function injectProjectsJsonLd(projects: Project[]) {
   el.textContent = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Projects by Shanto Joseph",
+    "name": "Projects by Yassine Benazzou",
     "url": `${SITE.url}/projects`,
     "itemListElement": projects.map((p, i) => ({
       "@type": "ListItem",

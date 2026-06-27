@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { appConfig as localConfig, type AppConfigData } from '@/data/config';
 
-export interface AppConfig {
-    key: string;
-    value: string;
-    description?: string;
-}
+export interface AppConfig extends AppConfigData {}
 
 export function useAppConfig() {
     const [config, setConfig] = useState<Record<string, string>>({});
@@ -16,16 +11,13 @@ export function useAppConfig() {
     useEffect(() => {
         async function fetchConfig() {
             try {
-                const snapshot = await getDocs(collection(db, 'app_config'));
                 const configMap: Record<string, string> = {};
-                snapshot.docs.forEach(d => {
-                    const data = d.data() as AppConfig;
-                    configMap[data.key] = data.value;
+                localConfig.forEach((item) => {
+                    configMap[item.key] = item.value;
                 });
                 setConfig(configMap);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to fetch config');
-                // silently handle config fetch error
             } finally {
                 setLoading(false);
             }

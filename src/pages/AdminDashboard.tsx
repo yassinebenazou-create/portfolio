@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, Plus, FolderKanban, Code, Settings, BarChart3, User, LayoutDashboard, Mail } from "lucide-react";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { gooeyToast } from "goey-toast";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import SkillsManager from "@/components/admin/SkillsManager";
@@ -17,11 +15,9 @@ import { useMessages } from "@/hooks/useMessages";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import MessagesManager from "@/components/admin/MessagesManager";
 
-import { User as FirebaseUser } from "firebase/auth";
-
 const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<FirebaseUser | null>(null);
+    const [user, setUser] = useState<{ email?: string; displayName?: string; photoURL?: string } | null>(null);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const { projects } = useProjects();
@@ -30,23 +26,27 @@ const AdminDashboard = () => {
     const activeTab = searchParams.get('tab') || 'dashboard';
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-            if (!firebaseUser) { navigate("/razer"); return; }
-            const allowedEmails = (import.meta.env.VITE_ADMIN_EMAILS || "").split(",").map((e: string) => e.trim()).filter(Boolean);
-            if (firebaseUser.email && !allowedEmails.includes(firebaseUser.email)) {
-                signOut(auth);
-                gooeyToast.error("Unauthorized access.");
-                navigate("/razer");
-                return;
-            }
-            setUser(firebaseUser);
-            setLoading(false);
-        });
-        return () => unsubscribe();
+        const allowedEmails = (import.meta.env.VITE_ADMIN_EMAILS || "").split(",").map((e: string) => e.trim()).filter(Boolean);
+        const storedEmail = window.sessionStorage.getItem("admin-email");
+
+        if (!storedEmail) {
+            navigate("/razer");
+            return;
+        }
+
+        if (!allowedEmails.includes(storedEmail)) {
+            window.sessionStorage.removeItem("admin-email");
+            gooeyToast.error("Unauthorized access.");
+            navigate("/razer");
+            return;
+        }
+
+        setUser({ email: storedEmail, displayName: storedEmail, photoURL: undefined });
+        setLoading(false);
     }, [navigate]);
 
     const handleLogout = async () => {
-        try { await signOut(auth); gooeyToast.success("Logged out successfully"); navigate("/razer"); }
+        try { window.sessionStorage.removeItem("admin-email"); gooeyToast.success("Logged out successfully"); navigate("/razer"); }
         catch { gooeyToast.error("Logout failed"); }
     };
 

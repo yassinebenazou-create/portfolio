@@ -22,8 +22,6 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           // Core React
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          // Firebase — large, rarely changes
-          "vendor-firebase": ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/analytics"],
           // Animation libs
           "vendor-motion": ["framer-motion"],
           // 3D / background — heaviest, only used on main page

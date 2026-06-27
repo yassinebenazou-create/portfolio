@@ -7,8 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Save, User, Github, Linkedin, Twitter, Instagram, Mail, FileText } from "lucide-react";
 import { gooeyToast } from "goey-toast";
 import { useProfile, Profile } from "@/hooks/useProfile";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 const ProfileManager = () => {
     const { profile: initialProfile, loading: initialLoading } = useProfile();
@@ -26,7 +24,7 @@ const ProfileManager = () => {
         setSubmitting(true);
         try {
             const { id: _id, ...profileData } = profile as Profile;
-            await setDoc(doc(db, "profile", "main"), { ...profileData, updated_at: serverTimestamp() }, { merge: true });
+            localStorage.setItem("portfolio-profile", JSON.stringify({ id: "main", ...profileData, updated_at: new Date().toISOString() }));
             gooeyToast.success("Profile updated successfully!");
         } catch (error: unknown) {
             gooeyToast.error(error instanceof Error ? error.message : "Failed to update profile");

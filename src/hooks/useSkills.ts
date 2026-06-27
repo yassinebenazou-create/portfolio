@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { skills as localSkills, type SkillData } from '@/data/skills';
 
-export interface Skill {
-    id: string;
-    name: string;
-    icon?: string;
-}
+export interface Skill extends SkillData {}
 
 export function useSkills() {
     const [skills, setSkills] = useState<Skill[]>([]);
@@ -20,11 +15,14 @@ export function useSkills() {
         setLoading(true);
         async function fetchSkills() {
             try {
-                const q = query(collection(db, 'skills'), orderBy('name', 'asc'));
-                const snapshot = await getDocs(q);
-                const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Skill[];
+                const storedSkills = typeof window !== 'undefined' ? window.localStorage.getItem('portfolio-skills') : null;
+                const sourceSkills = storedSkills ? JSON.parse(storedSkills) : localSkills;
+                const data = [...sourceSkills].sort((a: Skill, b: Skill) => a.name.localeCompare(b.name)) as Skill[];
                 setSkills(data);
+                setError(null);
             } catch (err) {
+                const data = [...localSkills].sort((a, b) => a.name.localeCompare(b.name)) as Skill[];
+                setSkills(data);
                 setError(err instanceof Error ? err.message : 'Failed to fetch skills');
             } finally {
                 setLoading(false);

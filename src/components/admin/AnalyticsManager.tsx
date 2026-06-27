@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ExternalLink, Save, BarChart3, Loader2 } from "lucide-react";
 import { gooeyToast } from "goey-toast";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 const AnalyticsManager = () => {
     const DEFAULT_URL = import.meta.env.VITE_ANALYTICS_EMBED_URL || "";
@@ -18,12 +16,9 @@ const AnalyticsManager = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const docSnap = await getDoc(doc(db, "app_config", "analytics_embed_url"));
-                if (docSnap.exists() && docSnap.data().value) {
-                    setEmbedUrl(docSnap.data().value);
-                } else {
-                    const savedUrl = localStorage.getItem("analytics_embed_url");
-                    if (savedUrl) setEmbedUrl(savedUrl);
+                const savedUrl = localStorage.getItem("analytics_embed_url");
+                if (savedUrl) {
+                    setEmbedUrl(savedUrl);
                 }
             } catch {
                 // silently fail, use defaults
@@ -38,7 +33,6 @@ const AnalyticsManager = () => {
         if (!embedUrl.trim()) { gooeyToast.error("Please enter a valid URL"); return; }
         setSaving(true);
         try {
-            await setDoc(doc(db, "app_config", "analytics_embed_url"), { key: "analytics_embed_url", value: embedUrl, updated_at: new Date().toISOString() });
             localStorage.setItem("analytics_embed_url", embedUrl);
             setIsEditing(false);
             gooeyToast.success("Analytics URL saved!");

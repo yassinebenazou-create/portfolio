@@ -7,8 +7,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Plus, Pencil, Trash2, Loader2, Search, ImagePlus, X } from "lucide-react";
-import { collection, addDoc, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { gooeyToast } from "goey-toast";
 import { useProjects } from "@/hooks/useProjects";
 
@@ -88,13 +86,13 @@ const ProjectsManager = () => {
                 created_at: editingProject?.created_at || new Date().toISOString(),
             };
 
-            if (editingProject) {
-                await updateDoc(doc(db, "projects", editingProject.id), projectData);
-                gooeyToast.success("Project updated successfully!");
-            } else {
-                await addDoc(collection(db, "projects"), { ...projectData, created_at: serverTimestamp() });
-                gooeyToast.success("Project created successfully!");
-            }
+            const storageKey = "portfolio-projects";
+            const storedProjects = JSON.parse(localStorage.getItem(storageKey) || "null") || [];
+            const nextProjects = editingProject
+                ? storedProjects.map((project: Project) => project.id === editingProject.id ? { ...project, ...projectData } : project)
+                : [{ id: `${Date.now()}`, ...projectData }, ...storedProjects];
+            localStorage.setItem(storageKey, JSON.stringify(nextProjects));
+            gooeyToast.success(editingProject ? "Project updated successfully!" : "Project created successfully!");
 
             setOpen(false);
             resetForm();
@@ -110,7 +108,10 @@ const ProjectsManager = () => {
         if (!confirm("Are you sure you want to delete this project?")) return;
 
         try {
-            await deleteDoc(doc(db, "projects", id));
+            const storageKey = "portfolio-projects";
+            const storedProjects = JSON.parse(localStorage.getItem(storageKey) || "null") || [];
+            const nextProjects = storedProjects.filter((project: Project) => project.id !== id);
+            localStorage.setItem(storageKey, JSON.stringify(nextProjects));
             gooeyToast.success("Project deleted successfully!");
             refresh();
         } catch (error: unknown) {

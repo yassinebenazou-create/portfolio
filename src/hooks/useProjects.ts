@@ -1,19 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { projects as localProjects, type ProjectData } from '@/data/projects';
 
-export interface Project {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    images?: string[];
-    tech: string[];
-    github: string;
-    live?: string;
-    featured: boolean;
-    created_at?: string;
-}
+export interface Project extends ProjectData {}
 
 export function useProjects() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -27,11 +15,14 @@ export function useProjects() {
         setLoading(true);
         async function fetchProjects() {
             try {
-                const q = query(collection(db, 'projects'), orderBy('created_at', 'desc'));
-                const snapshot = await getDocs(q);
-                const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Project[];
+                const storedProjects = typeof window !== 'undefined' ? window.localStorage.getItem('portfolio-projects') : null;
+                const sourceProjects = storedProjects ? JSON.parse(storedProjects) : localProjects;
+                const data = [...sourceProjects].sort((a: Project, b: Project) => (b.created_at || '').localeCompare(a.created_at || '')) as Project[];
                 setProjects(data);
+                setError(null);
             } catch (err) {
+                const data = [...localProjects].sort((a, b) => (b.created_at || '').localeCompare(a.created_at || '')) as Project[];
+                setProjects(data);
                 setError(err instanceof Error ? err.message : 'Failed to fetch projects');
             } finally {
                 setLoading(false);

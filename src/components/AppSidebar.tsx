@@ -19,7 +19,6 @@ const navItems: { title: string; id: string; icon: React.ElementType; url?: stri
   { title: "About", id: "about", icon: User },
   { title: "Projects", id: "projects", icon: Briefcase },
   { title: "Skills", id: "skills", icon: Code },
-  { title: "Blog", id: "blog", icon: PenTool, url: "https://blog.shantojoseph.com/" },
   { title: "Contact", id: "contact", icon: Mail },
 ];
 
@@ -29,7 +28,7 @@ export function AppSidebar() {
   const [activeSection, setActiveSection] = useState("home");
   const { profile } = useProfile();
 
-  const fullName = profile?.full_name || "Shanto Joseph";
+  const fullName = profile?.full_name || "Yassine Benazzou";
 
   useEffect(() => {
     const handleScroll = () => {

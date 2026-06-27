@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { messages as localMessages, type MessageData } from "@/data/messages";
 
-export interface ContactMessage {
-  id: string;
-  name: string;
-  email: string;
-  message: string;
-  status: string;
-  created_at?: string;
-}
+export interface ContactMessage extends MessageData {}
 
 export function useMessages() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -24,15 +16,14 @@ export function useMessages() {
 
     async function fetchMessages() {
       try {
-        const q = query(collection(db, "messages"), orderBy("created_at", "desc"));
-        const snapshot = await getDocs(q);
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as ContactMessage[];
+        const storedMessages = typeof window !== 'undefined' ? window.localStorage.getItem('portfolio-messages') : null;
+        const sourceMessages = storedMessages ? JSON.parse(storedMessages) : localMessages;
+        const data = [...sourceMessages].sort((a: ContactMessage, b: ContactMessage) => (b.created_at || "").localeCompare(a.created_at || "")) as ContactMessage[];
         setMessages(data);
         setError(null);
       } catch (err) {
+        const data = [...localMessages].sort((a, b) => (b.created_at || "").localeCompare(a.created_at || "")) as ContactMessage[];
+        setMessages(data);
         setError(err instanceof Error ? err.message : "Failed to fetch messages");
       } finally {
         setLoading(false);

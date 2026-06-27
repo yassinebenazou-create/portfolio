@@ -1,22 +1,7 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { profile as localProfile, type ProfileData } from '@/data/profile';
 
-export interface Profile {
-    id?: string;
-    full_name: string;
-    role: string;
-    bio: string;
-    email: string;
-    github?: string;
-    linkedin?: string;
-    twitter?: string;
-    instagram?: string;
-    resume_url?: string;
-    avatar_url?: string;
-    created_at?: string;
-    updated_at?: string;
-}
+export interface Profile extends ProfileData {}
 
 export function useProfile() {
     const [profile, setProfile] = useState<Profile | null>(null);
@@ -26,14 +11,12 @@ export function useProfile() {
     useEffect(() => {
         async function fetchProfile() {
             try {
-                const docRef = doc(db, 'profile', 'main');
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setProfile({ id: docSnap.id, ...docSnap.data() } as Profile);
-                } else {
-                    setProfile(null);
-                }
+                const storedProfile = typeof window !== 'undefined' ? window.localStorage.getItem('portfolio-profile') : null;
+                const resolvedProfile = storedProfile ? JSON.parse(storedProfile) : localProfile;
+                setProfile(resolvedProfile as Profile);
+                setError(null);
             } catch (err) {
+                setProfile(localProfile as Profile);
                 setError(err instanceof Error ? err.message : 'Failed to fetch profile');
             } finally {
                 setLoading(false);

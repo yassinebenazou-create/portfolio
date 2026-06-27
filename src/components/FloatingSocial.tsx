@@ -10,13 +10,13 @@ const FloatingSocial = () => {
     {
       icon: Github,
       label: "GitHub",
-      href: profile?.github || "https://github.com/shanto-joseph",
+      href: profile?.github || "https://github.com/yassinebenazzou",
       available: !!(profile?.github || true)
     },
     {
       icon: Linkedin,
       label: "LinkedIn",
-      href: profile?.linkedin || "https://www.linkedin.com/in/shanto-joseph",
+      href: profile?.linkedin || "https://www.linkedin.com/in/yassinebenazzou",
       available: !!(profile?.linkedin || true)
     },
     {

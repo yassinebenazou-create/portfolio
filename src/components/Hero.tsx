@@ -22,12 +22,12 @@ const Hero = () => {
   const { profile } = useProfile();
   const { themeColor } = useThemeColor();
 
-  const fullName = profile?.full_name || DEFAULT_PROFILE.full_name;
-  const nameParts = fullName.split(" ");
-  const firstName = nameParts[0];
-  const lastName = nameParts.slice(1).join(" ");
-  const role = profile?.role || DEFAULT_PROFILE.role;
-  const bio = profile?.bio || DEFAULT_PROFILE.bio;
+  const fullName = (profile?.full_name?.trim() || DEFAULT_PROFILE.full_name).trim();
+  const nameParts = fullName.split(/\s+/).filter(Boolean);
+  const firstName = nameParts[0] || DEFAULT_PROFILE.first_name;
+  const lastName = nameParts.slice(1).join(" ") || DEFAULT_PROFILE.last_name;
+  const role = profile?.role?.trim() || DEFAULT_PROFILE.role;
+  const bio = profile?.bio?.trim() || DEFAULT_PROFILE.bio;
   const email = profile?.email || DEFAULT_PROFILE.email;
   const github = profile?.github || DEFAULT_PROFILE.github;
   const linkedin = profile?.linkedin || DEFAULT_PROFILE.linkedin;

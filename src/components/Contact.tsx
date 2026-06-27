@@ -6,8 +6,6 @@ import { useState } from "react";
 import { gooeyToast } from "goey-toast";
 import { useProfile } from "@/hooks/useProfile";
 import { DEFAULT_PROFILE } from "@/lib/config";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 const Contact = () => {
   const { profile } = useProfile();
@@ -37,26 +35,30 @@ const Contact = () => {
     const trimmedMessage = formData.message.trim();
 
     try {
-      await addDoc(collection(db, "messages"), {
+      const persistedMessages = JSON.parse(localStorage.getItem("portfolio-messages") || "[]");
+      const messageRecord = {
+        id: `${Date.now()}`,
         name: trimmedName,
         email: trimmedEmail,
         message: trimmedMessage,
         status: "new",
         created_at: createdAt,
-      });
+      };
+      localStorage.setItem("portfolio-messages", JSON.stringify([messageRecord, ...persistedMessages].slice(0, 50)));
 
-      const { default: emailjs } = await import("@emailjs/browser");
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      if (serviceId && templateId && publicKey) {
+        const { default: emailjs } = await import("@emailjs/browser");
+        await emailjs.send(serviceId, templateId, {
           user_name: trimmedName,
           user_email: trimmedEmail,
           message: trimmedMessage,
           created_at: createdAt,
-        },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
+        }, publicKey);
+      }
 
       gooeyToast.success("Message sent! I'll get back to you soon.");
       setFormData({ name: "", email: "", message: "" });
@@ -197,7 +199,7 @@ const Contact = () => {
                 </a>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <MapPin className="w-5 h-5" />
-                  <span>Ernakulam, India</span>
+                  <span>Casablanca / El Jadida, Morocco</span>
                 </div>
               </div>
             </div>

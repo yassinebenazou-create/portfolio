@@ -1,23 +1,23 @@
 /**
  * Central config for all hardcoded fallback values.
- * These are used when Firebase profile data is unavailable.
+ * These are used when profile data is unavailable.
  */
 export const DEFAULT_PROFILE = {
-  full_name: "Shanto Joseph",
-  first_name: "Shanto",
-  last_name: "Joseph",
-  role: "Full-Stack Developer",
-  email: "shantojoseph23@gmail.com",
-  bio: "Turning ideas into interactive, dynamic, and scalable digital experiences.",
-  github: "https://github.com/shanto-joseph",
-  linkedin: "https://www.linkedin.com/in/shanto-joseph",
-  resume_url: "https://rxresu.me/shantojoseph23/resume",
-  location: "Ernakulam, India",
+  full_name: "Yassine Benazzou",
+  first_name: "Yassine",
+  last_name: "Benazzou",
+  role: "Full-Stack Web Developer • Freelance & Remote Contracts",
+  email: "yassine.benazzou@gmail.com",
+  bio: "Results-driven Full-Stack Web Developer with hands-on experience building responsive, high-performance web applications using React, PHP, Node.js, and MySQL. Available for remote freelance and contract engagements.",
+  github: "https://github.com/yassinebenazou-create",
+  linkedin: "https://www.linkedin.com/in/yassine-benazzou-4956b4384/",
+  resume_url: new URL('../assets/Yassine_Benazzou_CV.docx', import.meta.url).href,
+  location: "Casablanca / El Jadida, Morocco",
 } as const;
 
 export const SITE = {
-  url: "https://shantojoseph.com",
-  title: "Shanto Joseph | Full-Stack Developer",
-  description: "Full-Stack Developer building innovative web applications with React, Python, Java, and AI/ML.",
-  ogImage: "https://shantojoseph.com/favicon.svg",
+  url: "https://yassinebenazzou.com",
+  title: "Yassine Benazzou | Full-Stack Web Developer",
+  description: "Full-Stack Web Developer building responsive web applications with React, PHP, Node.js, and MySQL.",
+  ogImage: "https://yassinebenazzou.com/favicon.svg",
 } as const;

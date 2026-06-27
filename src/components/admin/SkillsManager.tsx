@@ -6,8 +6,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Pencil, Trash2, Loader2, Search, X } from "lucide-react";
-import { collection, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { gooeyToast } from "goey-toast";
 import { useSkills } from "@/hooks/useSkills";
 
@@ -53,13 +51,13 @@ const SkillsManager = () => {
                 icon: formData.icon || null,
             };
 
-            if (editingSkill) {
-                await updateDoc(doc(db, "skills", editingSkill.id), skillData);
-                gooeyToast.success("Skill updated successfully!");
-            } else {
-                await addDoc(collection(db, "skills"), skillData);
-                gooeyToast.success("Skill created successfully!");
-            }
+            const storageKey = "portfolio-skills";
+            const storedSkills = JSON.parse(localStorage.getItem(storageKey) || "null") || [];
+            const nextSkills = editingSkill
+                ? storedSkills.map((skill: Skill) => skill.id === editingSkill.id ? { ...skill, ...skillData } : skill)
+                : [{ id: `${Date.now()}`, ...skillData }, ...storedSkills];
+            localStorage.setItem(storageKey, JSON.stringify(nextSkills));
+            gooeyToast.success(editingSkill ? "Skill updated successfully!" : "Skill created successfully!");
 
             setOpen(false);
             resetForm();
@@ -75,7 +73,10 @@ const SkillsManager = () => {
         if (!confirm("Are you sure you want to delete this skill?")) return;
 
         try {
-            await deleteDoc(doc(db, "skills", id));
+            const storageKey = "portfolio-skills";
+            const storedSkills = JSON.parse(localStorage.getItem(storageKey) || "null") || [];
+            const nextSkills = storedSkills.filter((skill: Skill) => skill.id !== id);
+            localStorage.setItem(storageKey, JSON.stringify(nextSkills));
             gooeyToast.success("Skill deleted successfully!");
             refresh();
         } catch (error: unknown) {
@@ -87,7 +88,10 @@ const SkillsManager = () => {
         if (!confirm(`Are you sure you want to delete ${selectedSkills.length} skills?`)) return;
 
         try {
-            await Promise.all(selectedSkills.map(id => deleteDoc(doc(db, "skills", id))));
+            const storageKey = "portfolio-skills";
+            const storedSkills = JSON.parse(localStorage.getItem(storageKey) || "null") || [];
+            const nextSkills = storedSkills.filter((skill: Skill) => !selectedSkills.includes(skill.id));
+            localStorage.setItem(storageKey, JSON.stringify(nextSkills));
             gooeyToast.success("Skills deleted successfully!");
             setSelectedSkills([]);
             refresh();

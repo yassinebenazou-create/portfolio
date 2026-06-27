@@ -84,7 +84,14 @@ const Skills = () => {
                         style={{ animationDelay: `${index * 0.05}s` }}
                       >
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors duration-300 p-2 glass-card">
-                          <img src={skill.icon || '/placeholder-icon.png'} alt={skill.name} loading="lazy" decoding="async" className="w-full h-full object-contain" />
+                          <img
+                            src={skill.icon || '/placeholder.svg'}
+                            alt={skill.name}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full object-contain"
+                            onError={(event) => { event.currentTarget.src = '/placeholder.svg'; }}
+                          />
                         </div>
                         <span className="text-[10px] text-center font-medium text-foreground line-clamp-2">
                           {skill.name}
@@ -108,7 +115,14 @@ const Skills = () => {
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors duration-300 p-3 glass-card shadow-glow">
-                  <img src={skill.icon || '/placeholder-icon.png'} alt={skill.name} loading="lazy" decoding="async" className="w-full h-full object-contain" />
+                  <img
+                    src={skill.icon || '/placeholder.svg'}
+                    alt={skill.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-contain"
+                    onError={(event) => { event.currentTarget.src = '/placeholder.svg'; }}
+                  />
                 </div>
                 <span className="text-xs text-center font-medium text-foreground">
                   {skill.name}
